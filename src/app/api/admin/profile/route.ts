@@ -25,6 +25,7 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const data = await request.json();
+        console.log(data);
 
         // Deactivate current active profile if exists
         await prisma.profile.updateMany({
@@ -37,6 +38,7 @@ export async function POST(request: Request) {
             data: {
                 title: data.title,
                 summary: data.summary,
+                motto: data.motto,
                 isActive: true
             }
         });
@@ -61,7 +63,8 @@ export async function PUT(request: Request) {
             },
             data: {
                 title: data.title,
-                summary: data.summary
+                summary: data.summary,
+                motto: data.motto,
             }
         });
 

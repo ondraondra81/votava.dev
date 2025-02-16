@@ -21,6 +21,7 @@ model Profile {
   id        Int      @id @default(autoincrement())
   title     String   // např. "Senior IT & Business Analyst"
   summary   String   @db.Text  // delší popis
+  motto     String   @db.Text  // delší popis
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -53,6 +54,7 @@ model Experience {
 model Skill {
   id          Int     @id @default(autoincrement())
   name        String
+  description String?
   level       Int
   category    String
   order       Int     @default(0)

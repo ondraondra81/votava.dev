@@ -6,7 +6,7 @@ import {
     getExperience,
     getSkills,
     getCertificates
-} from '@/lib/api'
+} from '@/lib/dataProviders'
 import { CVHeader } from '@/components/cv/CVHeader'
 import { Profile } from '@/components/cv/Profile'
 import { Projects } from '@/components/cv/Projects'

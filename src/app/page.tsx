@@ -1,78 +1,80 @@
-import { Briefcase, FileText, Github, Mail } from 'lucide-react'
-import Link from 'next/link'
+import { Github, Linkedin, Mail } from 'lucide-react'
+import Image from 'next/image'
+import ai_programmer from './../../public/images/ai_programmer.png'
+import {getContact, getProfile} from "@/lib/dataProviders";
+import {Footer} from "@/components/Footer";
 
-export default function HomePage() {
+
+export default async function LandingPage() {
+    const [profile, contact] = await Promise.all([getProfile(), getContact()]);
     return (
-        <div className="min-h-screen bg-gray-50">
-            <main className="max-w-5xl mx-auto px-4 pt-20 pb-16">
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                        Ondřej Votava
-                    </h1>
-                    <p className="text-xl text-gray-600 mb-8">
-                        Senior IT & Business Analyst
-                    </p>
-                    <p className="text-gray-600 max-w-2xl mx-auto">
-                        Specializuji se na analýzu a vývoj informačních systémů s více než 15 lety
-                        zkušeností v bankovnictví, telekomunikacích a pojišťovnictví.
-                    </p>
-                </div>
+        <div className="min-h-screen bg-white flex flex-col">
+            <div className="container mx-auto px-4 flex-grow flex items-center">
+                <div className="grid lg:grid-cols-3 gap-12 items-center h-[800px]">
+                    {/* Left Side - Creative Typography */}
+                    <div>
+                        <div className="mb-8">
+                            <div className="text-lg text-red-700 mb-2 uppercase tracking-wide">
+                                { profile.title }
+                            </div>
+                            <h1 className="text-6xl font-black text-gray-900 leading-tight mb-4">
+                                Ondřej
+                                <br />
+                                Votava
+                            </h1>
+                        </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <Briefcase className="w-8 h-8 text-red-700 mb-4" />
-                        <h2 className="text-xl font-semibold mb-2">Projektová zkušenost</h2>
-                        <p className="text-gray-600">
-                            Vedení komplexních IT projektů v bankovnictví a telekomunikacích.
-                            Specializace na integraci systémů a analýzu business požadavků.
-                        </p>
+                        <blockquote className="border-l-4 border-red-700 pl-4 mb-8 text-gray-600 italic">
+                            {profile.motto}
+                        </blockquote>
+
+                        <div className="flex space-x-4 items-center">
+                            <a
+                                href="/cv"
+                                className="bg-red-700 text-white px-6 py-3 rounded-full hover:bg-red-800 transition-colors"
+                            >
+                                curriculum vitae
+                            </a>
+
+                            <div className="flex space-x-4">
+                                <a
+                                    href={contact.github}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-red-700"
+                                >
+                                    <Github className="w-6 h-6" />
+                                </a>
+                                <a
+                                    href={contact.linkedin}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-600 hover:text-red-700"
+                                >
+                                    <Linkedin className="w-6 h-6" />
+                                </a>
+                                <a
+                                    href="mailto:your.email@domain.com"
+                                    className="text-gray-600 hover:text-red-700"
+                                >
+                                    <Mail className="w-6 h-6" />
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <FileText className="w-8 h-8 text-red-700 mb-4" />
-                        <h2 className="text-xl font-semibold mb-2">Technická expertíza</h2>
-                        <p className="text-gray-600">
-                            Hluboké znalosti v oblasti systémové analýzy, návrhu řešení
-                            a vývoje enterprise aplikací.
-                        </p>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <Mail className="w-8 h-8 text-red-700 mb-4" />
-                        <h2 className="text-xl font-semibold mb-2">Spolupráce</h2>
-                        <p className="text-gray-600">
-                            Otevřený novým výzvám a projektům. Specializuji se na dlouhodobou
-                            spolupráci a komplexní řešení.
-                        </p>
-                    </div>
-                </div>
-
-                <div className="text-center">
-                    <Link
-                        href="/cv"
-                        className="inline-block bg-red-700 text-white px-8 py-3 rounded-lg font-medium hover:bg-red-800 mb-8"
-                    >
-                        Zobrazit CV
-                    </Link>
-
-                    <div className="flex justify-center space-x-6">
-                        <a
-                            href="https://github.com/yourusername"
-                            className="text-gray-600 hover:text-red-700"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <Github className="w-6 h-6" />
-                        </a>
-                        <a
-                            href="mailto:your.email@domain.com"
-                            className="text-gray-600 hover:text-red-700"
-                        >
-                            <Mail className="w-6 h-6" />
-                        </a>
+                    {/* Right Side - Technical Visual */}
+                    <div className="hidden col-span-2 lg:block">
+                        <div className="w-full  bg-red-100 rounded-lg overflow-hidden flex items-center justify-center">
+                            <div className="text-red-700 text-center">
+                                <Image src={ai_programmer} alt="Illustration of a programmer with artificial intelligence concept"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </main>
+            </div>
+
+            <Footer />
         </div>
     )
 }

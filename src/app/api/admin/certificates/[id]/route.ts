@@ -1,7 +1,7 @@
 // src/app/api/certificates/[id]/route.ts
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import prisma from '@/lib/prisma'
+import {prisma} from "@/lib/prisma";
 
 export async function GET(
     request: Request,

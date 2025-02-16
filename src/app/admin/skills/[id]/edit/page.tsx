@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
+import { use } from 'react'
 
 interface SkillFormData {
     name: string
+    description: string
     level: number
     category: string
     order: number
@@ -13,16 +15,17 @@ interface SkillFormData {
 }
 
 const PREDEFINED_CATEGORIES = [
-    'Analysis & Documentation',
-    'Technologies',
-    'Programming',
+    'Analytické dovednosti',
+    'Vývojářské dovednosti',
     'Soft Skills'
 ]
 
-export default function EditSkillPage({ params }: { params: { id: string } }) {
+export default function EditSkillPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = use(params)
     const router = useRouter()
     const [formData, setFormData] = useState<SkillFormData>({
         name: '',
+        description: '',
         level: 75,
         category: PREDEFINED_CATEGORIES[0],
         order: 0,
@@ -35,16 +38,16 @@ export default function EditSkillPage({ params }: { params: { id: string } }) {
     const [showNewCategoryInput, setShowNewCategoryInput] = useState(false)
 
     useEffect(() => {
-        if (params.id !== 'new') {
+        if (id !== 'new') {
             fetchSkill()
         } else {
             setIsLoading(false)
         }
-    }, [params.id])
+    }, [id])
 
     const fetchSkill = async () => {
         try {
-            const response = await fetch(`/api/admin/skills/${params.id}`)
+            const response = await fetch(`/api/admin/skills/${id}`)
             if (!response.ok) throw new Error('Failed to fetch skill')
             const data = await response.json()
             setFormData(data)
@@ -64,11 +67,11 @@ export default function EditSkillPage({ params }: { params: { id: string } }) {
         setIsSaving(true)
 
         try {
-            const url = params.id === 'new'
+            const url = id === 'new'
                 ? '/api/admin/skills'
-                : `/api/admin/skills/${params.id}`
+                : `/api/admin/skills/${id}`
 
-            const method = params.id === 'new' ? 'POST' : 'PUT'
+            const method = id === 'new' ? 'POST' : 'PUT'
 
             const response = await fetch(url, {
                 method,
@@ -112,7 +115,7 @@ export default function EditSkillPage({ params }: { params: { id: string } }) {
                     <ArrowLeft className="w-6 h-6" />
                 </button>
                 <h1 className="text-2xl font-bold">
-                    {params.id === 'new' ? 'New Skill' : 'Edit Skill'}
+                    {id === 'new' ? 'New Skill' : 'Edit Skill'}
                 </h1>
             </div>
 
@@ -125,6 +128,19 @@ export default function EditSkillPage({ params }: { params: { id: string } }) {
                         type="text"
                         name="name"
                         value={formData.name}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
+                        required
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                        Description
+                    </label>
+                    <input
+                        type="text"
+                        name="description"
+                        value={formData.description}
                         onChange={handleInputChange}
                         className="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
                         required

@@ -1,7 +1,7 @@
 // src/app/api/skills/[id]/route.ts
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import prisma from '@/lib/prisma'
+import {prisma} from "@/lib/prisma";
 
 export async function GET(
     request: Request,
@@ -43,7 +43,7 @@ export async function PUT(
                 { status: 401 }
             )
         }
-
+        const id = await params.id
         const data = await request.json()
 
         const skill = await prisma.skill.update({
@@ -52,6 +52,7 @@ export async function PUT(
             },
             data: {
                 name: data.name,
+                description: data.description,
                 level: data.level,
                 category: data.category,
                 order: data.order,

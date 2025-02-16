@@ -1,22 +1,34 @@
 // src/app/api/skills/route.ts
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import prisma from '@/lib/prisma'
+import {prisma} from "@/lib/prisma";
 
 export async function GET() {
     try {
-        const skills = await prisma.skill.findMany({
-            where: {
-                isPublished: true
-            },
-            orderBy: [
-                { category: 'asc' },
-                { order: 'asc' }
-            ]
-        })
+        const session = await getServerSession()
 
-        return NextResponse.json(skills)
+        if (!session) {
+            return NextResponse.json(
+                { error: 'Unauthorized' },
+                { status: 401 }
+            )
+        }
+
+        const skills = await prisma.skill.findMany({
+            orderBy: [
+                {
+                    category: 'asc'
+                },
+                {
+                    order: 'asc'
+                }
+            ]
+        });
+
+        return NextResponse.json(skills);
+
     } catch (error) {
+        console.error(error);
         return NextResponse.json(
             { error: 'Failed to fetch skills' },
             { status: 500 }
@@ -40,6 +52,7 @@ export async function POST(request: Request) {
         const skill = await prisma.skill.create({
             data: {
                 name: data.name,
+                description: data.description,
                 level: data.level,
                 category: data.category,
                 order: data.order || 0,

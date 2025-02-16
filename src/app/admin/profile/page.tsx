@@ -7,12 +7,14 @@ interface ProfileData {
     id?: number
     title: string
     summary: string
+    motto: string
 }
 
 export default function ProfilePage() {
     const [formData, setFormData] = useState<ProfileData>({
         title: '',
-        summary: ''
+        summary: '',
+        motto: ''
     })
     const [isLoading, setIsLoading] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
@@ -111,13 +113,27 @@ export default function ProfilePage() {
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700">
+                        Motto
+                    </label>
+                    <textarea
+                        name="motto"
+                        value={formData.motto}
+                        onChange={handleInputChange}
+                        rows={6}
+                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">
                         Summary
                     </label>
                     <textarea
                         name="summary"
                         value={formData.summary}
                         onChange={handleInputChange}
-                        rows={6}
+                        rows={12}
                         className="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
                         required
                     />
