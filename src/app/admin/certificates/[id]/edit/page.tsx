@@ -1,7 +1,7 @@
 // src/app/admin/certificates/[id]/edit/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Plus, Minus } from 'lucide-react'
 
@@ -13,7 +13,8 @@ interface CertificateFormData {
     isPublished: boolean
 }
 
-export default function EditCertificatePage({ params }: { params: { id: string } }) {
+export default function EditCertificatePage(props: { params: Promise<{ id: string }> }) {
+    const params = use(props.params);
     const router = useRouter()
     const [formData, setFormData] = useState<CertificateFormData>({
         name: '',

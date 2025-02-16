@@ -13,7 +13,7 @@ export default async function RootLayout({
     children: React.ReactNode
 }) {
     const session = await getServerSession()
-    const headersList = headers()
+    const headersList = await headers()
 
     return (
         <html lang="cs">

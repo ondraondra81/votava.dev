@@ -1,7 +1,7 @@
 // src/app/admin/projects/[id]/edit/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Plus, Minus } from 'lucide-react'
 
@@ -15,7 +15,8 @@ interface ProjectFormData {
     isPublished: boolean
 }
 
-export default function EditProjectPage({ params }: { params: { id: string } }) {
+export default function EditProjectPage(props: { params: Promise<{ id: string }> }) {
+    const params = use(props.params);
     const router = useRouter()
     const [formData, setFormData] = useState<ProjectFormData>({
         company: '',
