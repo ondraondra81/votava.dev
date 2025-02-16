@@ -18,10 +18,12 @@ model User {
 }
 
 model Profile {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String   @db.Text
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  title     String   // např. "Senior IT & Business Analyst"
+  summary   String   @db.Text  // delší popis
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Project {
@@ -64,5 +66,19 @@ model Certificate {
   period      String
   skills      String[] @db.Text
   isPublished Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+}
+
+model Contact {
+  id          Int      @id @default(autoincrement())
+  name        String
+  position    String
+  email       String?
+  github      String?
+  linkedin    String?
+  phone       String?
+  location    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

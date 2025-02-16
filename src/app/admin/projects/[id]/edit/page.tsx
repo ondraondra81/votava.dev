@@ -40,7 +40,7 @@ export default function EditProjectPage({ params }: { params: { id: string } }) 
 
     const fetchProject = async () => {
         try {
-            const response = await fetch(`/api/projects/${params.id}`)
+            const response = await fetch(`/api/admin/projects/${params.id}`)
             if (!response.ok) throw new Error('Failed to fetch project')
             const data = await response.json()
             setFormData(data)
@@ -57,8 +57,8 @@ export default function EditProjectPage({ params }: { params: { id: string } }) 
 
         try {
             const url = params.id === 'new'
-                ? '/api/projects'
-                : `/api/projects/${params.id}`
+                ? '/api/admin/projects'
+                : `/api/admin/projects/${params.id}`
 
             const method = params.id === 'new' ? 'POST' : 'PUT'
 

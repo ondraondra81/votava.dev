@@ -19,13 +19,15 @@ export default async function AdminLayout({
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="flex h-16 items-center justify-between">
                         <div className="flex items-center">
-                            <span className="text-xl font-bold">CV Admin</span>
+                            <span className="text-xl font-bold">votava.dev Admin</span>
                             <div className="ml-10 flex space-x-4">
                                 <a href="/admin" className="text-gray-700 hover:text-red-700">Dashboard</a>
-                                <a href="/admin/projects" className="text-gray-700 hover:text-red-700">Projekty</a>
-                                <a href="/admin/experience" className="text-gray-700 hover:text-red-700">Zkušenosti</a>
-                                <a href="/admin/skills" className="text-gray-700 hover:text-red-700">Dovednosti</a>
-                                <a href="/admin/certificates" className="text-gray-700 hover:text-red-700">Certifikáty</a>
+                                <a href="/admin/profile" className="text-gray-700 hover:text-red-700">Profile</a>
+                                <a href="/admin/contact" className="text-gray-700 hover:text-red-700">Contact</a>
+                                <a href="/admin/projects" className="text-gray-700 hover:text-red-700">Projects</a>
+                                <a href="/admin/experience" className="text-gray-700 hover:text-red-700">Work Experiences</a>
+                                <a href="/admin/skills" className="text-gray-700 hover:text-red-700">Skills</a>
+                                <a href="/admin/certificates" className="text-gray-700 hover:text-red-700">Certificates</a>
                             </div>
                         </div>
                     </div>

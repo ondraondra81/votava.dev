@@ -1,39 +1,26 @@
 // src/components/cv/Experience.tsx
-export function Experience() {
-    const experiences = [
-        {
-            company: 'ČSOB Leasing',
-            position: 'Senior IT Analytik',
-            period: '2022 - 2023',
-            description: 'Analýza změn potřebných pro reintegraci aplikací do nového core systému.',
-            responsibilities: [
-                'Vytváření detailních návrhových dokumentů',
-                'Analýza chyb a přiřazování úkolů vývojářům',
-                'Release management a správa nasazení na ACC a PROD prostředí'
-            ]
-        },
-        {
-            company: 'MEDIA FACTORY Czech Republic a.s.',
-            position: 'IT Analytik, Senior developer - Team leader',
-            period: '2017 - 2022',
-            description: 'Vedení týmu 8 IT profesionálů v oblasti IT služeb.',
-            responsibilities: [
-                'Business analýza a návrh řešení',
-                'Vysokoúrovňový a detailní funkční design',
-                'Návrh aplikací a vývoj software',
-                'Odhad nákladů na projekty'
-            ]
-        }
-    ]
+interface Experience {
+    id: number
+    company: string
+    position: string
+    period: string
+    description: string
+    responsibilities: string[]
+}
 
+interface Props {
+    experience: Experience[]
+}
+
+export function Experience({ experience }: Props) {
     return (
         <section className="bg-white rounded-lg shadow p-6 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-8">Pracovní zkušenosti</h2>
             <div className="relative">
                 <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-red-700"></div>
                 <div className="space-y-12">
-                    {experiences.map((exp, index) => (
-                        <div key={index} className="relative pl-12">
+                    {experience.map((exp) => (
+                        <div key={exp.id} className="relative pl-12">
                             <div className="absolute left-2 w-4 h-4 bg-red-700 rounded-full border-4 border-white"></div>
                             <div className="flex flex-col md:flex-row md:justify-between">
                                 <div>

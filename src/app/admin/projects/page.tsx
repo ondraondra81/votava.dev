@@ -26,7 +26,7 @@ export default function ProjectsPage() {
 
     const fetchProjects = async () => {
         try {
-            const response = await fetch('/api/projects')
+            const response = await fetch('/api/admin/projects')
             if (!response.ok) throw new Error('Failed to fetch projects')
             const data = await response.json()
             setProjects(data)
@@ -41,7 +41,7 @@ export default function ProjectsPage() {
         if (!confirm('Are you sure you want to delete this project?')) return
 
         try {
-            const response = await fetch(`/api/projects/${id}`, {
+            const response = await fetch(`/api/admin/projects/${id}`, {
                 method: 'DELETE'
             })
 

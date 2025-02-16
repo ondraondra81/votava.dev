@@ -1,35 +1,31 @@
-'use client';
+// src/components/cv/CVHeader.tsx
+import { Github, Linkedin, Mail } from 'lucide-react'
+import { DownloadPDFButton } from './DownloadPDFButton'
 
-import { Github, Linkedin, Mail, Download } from 'lucide-react'
-
-interface SocialLinks {
-    github?: string
-    linkedin?: string
-    email?: string
+interface Contact {
+    name: string
+    position: string
+    email: string | null
+    github: string | null
+    linkedin: string | null
 }
 
-const socialLinks: SocialLinks = {
-    github: 'https://github.com/yourusername',
-    linkedin: 'https://linkedin.com/in/yourusername',
-    email: 'mailto:your.email@domain.com'
+interface Props {
+    contact: Contact
 }
 
-export function CVHeader() {
-    const handleDownloadPDF = () => {
-        console.log('Stahování PDF...')
-    }
-
+export function CVHeader({ contact }: Props) {
     return (
         <header className="bg-white shadow-sm">
             <div className="max-w-5xl mx-auto px-4 py-6">
                 <div className="flex justify-between items-start">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Ondřej Votava</h1>
-                        <p className="mt-2 text-xl text-gray-600">Senior IT Analytik / Business Analytik</p>
+                        <h1 className="text-3xl font-bold text-gray-900"><a href={"/"}>{contact.name}</a></h1>
+                        <p className="mt-2 text-xl text-gray-600">{contact.position}</p>
                         <div className="mt-4 flex space-x-4">
-                            {socialLinks.github && (
+                            {contact.github && (
                                 <a
-                                    href={socialLinks.github}
+                                    href={contact.github}
                                     className="text-gray-500 hover:text-red-700 flex items-center"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -38,9 +34,9 @@ export function CVHeader() {
                                     GitHub
                                 </a>
                             )}
-                            {socialLinks.linkedin && (
+                            {contact.linkedin && (
                                 <a
-                                    href={socialLinks.linkedin}
+                                    href={contact.linkedin}
                                     className="text-gray-500 hover:text-red-700 flex items-center"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -49,9 +45,9 @@ export function CVHeader() {
                                     LinkedIn
                                 </a>
                             )}
-                            {socialLinks.email && (
+                            {contact.email && (
                                 <a
-                                    href={socialLinks.email}
+                                    href={`mailto:${contact.email}`}
                                     className="text-gray-500 hover:text-red-700 flex items-center"
                                 >
                                     <Mail className="w-5 h-5 mr-2" />
@@ -60,13 +56,7 @@ export function CVHeader() {
                             )}
                         </div>
                     </div>
-                    <button
-                        onClick={handleDownloadPDF}
-                        className="bg-red-700 text-white px-4 py-2 rounded-lg flex items-center hover:bg-red-800 transition-colors"
-                    >
-                        <Download className="w-4 h-4 mr-2" />
-                        Stáhnout PDF
-                    </button>
+                    <DownloadPDFButton />
                 </div>
             </div>
         </header>

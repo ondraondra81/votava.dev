@@ -1,6 +1,8 @@
 // src/app/layout.tsx
-import AuthProvider from '@/providers/SessionProvider'
 import { Inter } from 'next/font/google'
+import { getServerSession } from 'next-auth'
+import { headers } from 'next/headers'
+import AuthProvider from '@/components/AuthProvider'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin', 'latin-ext'] })
@@ -10,10 +12,13 @@ export default async function RootLayout({
                                          }: {
     children: React.ReactNode
 }) {
+    const session = await getServerSession()
+    const headersList = headers()
+
     return (
         <html lang="cs">
         <body className={inter.className}>
-        <AuthProvider>
+        <AuthProvider session={session}>
             {children}
         </AuthProvider>
         </body>
