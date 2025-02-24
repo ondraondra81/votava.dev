@@ -1,4 +1,6 @@
 import {prisma} from "@/lib/prisma";
+import {Experience} from "@/types/experience";
+import {JsonValue} from "@prisma/client/runtime/library";
 
 export const getProfile = async () => {
     try {
@@ -27,36 +29,43 @@ export const getContact = async () => {
     }
 };
 
-export const getExperience = async () => {
+export const getExperience = async (): Promise<Experience[]> => {
+    const parseDescription = (description: JsonValue): string => {
+        if (typeof description === "string") return description;
+        if (typeof description === "object" && description !== null) return JSON.stringify(description);
+        return "";
+    };
+
     try {
 
-        return await prisma.experience.findMany({
-            where: {
+        const rawExperiences = await prisma.experience.findMany({
+            where:{
                 isPublished: true
             },
-            orderBy: {
-                order: 'asc'
-            }
-        });
+            include: {
+                projects: true
+            },
+            orderBy: [
+                { startDate: "desc" },
+                { endDate: "desc" }
+            ]
+        })
+
+        return rawExperiences.map(exp => ({
+            ...exp,
+            startDate: exp.startDate.toISOString().split("T")[0], // Převod Date na "YYYY-MM-DD"
+            endDate: exp.endDate ? exp.endDate.toISOString().split("T")[0] : undefined,
+            description: parseDescription(exp.description),
+            projects: exp.projects.map(project => ({
+                ...project,
+                description: parseDescription(project.description),
+                startDate: project.startDate ? project.startDate.toISOString().split("T")[0] : undefined,
+                endDate: project.endDate ? project.endDate.toISOString().split("T")[0] : undefined
+            }))
+        }));
 
     } catch (error) {
         console.error('Error fetching Experiences:', error)
-    }
-};
-
-export const getProjects = async () => {
-    try {
-
-        return await prisma.project.findMany({
-            where: {
-                isPublished: true
-            },
-            orderBy: {
-                order: 'asc'
-            }
-        });
-    } catch (error) {
-        console.error('Error fetching Projects:', error)
     }
 };
 
@@ -69,10 +78,7 @@ export const getSkills = async () => {
             },
             orderBy: [
                 {
-                    category: 'asc'
-                },
-                {
-                    order: 'asc'
+                    order: 'desc'
                 }
             ]
         });

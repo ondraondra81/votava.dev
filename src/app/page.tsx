@@ -65,7 +65,7 @@ export default async function LandingPage() {
 
                     {/* Right Side - Technical Visual */}
                     <div className="hidden col-span-2 lg:block">
-                        <div className="w-full  bg-red-100 rounded-lg overflow-hidden flex items-center justify-center">
+                        <div className="w-full  bg-red-100 min-h-[640px] max-h-screen  rounded-lg overflow-hidden flex items-center justify-center">
                             <div className="text-red-700 text-center">
                                 <Image src={ai_programmer} alt="Illustration of a programmer with artificial intelligence concept"/>
                             </div>

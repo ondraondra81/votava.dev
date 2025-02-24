@@ -2,5 +2,5 @@
 import EditCertificatePage from '../[id]/edit/page'
 
 export default function NewCertificatePage() {
-    return <EditCertificatePage params={{ id: 'new' }} />
+    return <EditCertificatePage params={Promise.resolve({ id: 'new' })} />
 }

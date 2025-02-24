@@ -24,7 +24,6 @@ export default async function AdminLayout({
                                 <a href="/admin" className="text-gray-700 hover:text-red-700">Dashboard</a>
                                 <a href="/admin/profile" className="text-gray-700 hover:text-red-700">Profile</a>
                                 <a href="/admin/contact" className="text-gray-700 hover:text-red-700">Contact</a>
-                                <a href="/admin/projects" className="text-gray-700 hover:text-red-700">Projects</a>
                                 <a href="/admin/experience" className="text-gray-700 hover:text-red-700">Work Experiences</a>
                                 <a href="/admin/skills" className="text-gray-700 hover:text-red-700">Skills</a>
                                 <a href="/admin/certificates" className="text-gray-700 hover:text-red-700">Certificates</a>

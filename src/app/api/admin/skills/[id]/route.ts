@@ -39,7 +39,6 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
                 { status: 401 }
             )
         }
-        const id = await params.id
         const data = await request.json()
 
         const skill = await prisma.skill.update({
@@ -58,6 +57,7 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
 
         return NextResponse.json(skill)
     } catch (error) {
+        console.log(error)
         return NextResponse.json(
             { error: 'Failed to update skill' },
             { status: 500 }

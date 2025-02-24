@@ -1,56 +1,41 @@
+// src/app/api/admin/experience/[id]/route.ts
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import {prisma} from "@/lib/prisma";
+import { prisma } from '@/lib/prisma'
 
-export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
-    const params = await props.params;
+export async function GET(
+    request: Request, props: { params: Promise<{ id: string }> }
+) {
     try {
-
-        const session = await getServerSession()
-
-        if (!session) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            )
-        }
-
+        const params = await props.params;
         const experience = await prisma.experience.findUnique({
             where: {
                 id: parseInt(params.id)
+            },
+            include: {
+                projects: true
             }
         })
 
         if (!experience) {
-            return NextResponse.json(
-                { error: 'Experience not found' },
-                { status: 404 }
-            )
+            return NextResponse.json({ error: 'Experience not found' }, { status: 404 })
         }
 
         return NextResponse.json(experience)
     } catch (error) {
-        return NextResponse.json(
-            { error: 'Failed to fetch experience' },
-            { status: 500 }
-        )
+        console.error('Error fetching experience:', error)
+        return NextResponse.json({ error: 'Error fetching experience' }, { status: 500 })
     }
 }
 
-export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
-    const params = await props.params;
+export async function PUT(
+    request: Request,
+    props: { params: Promise<{ id: string }> }
+) {
     try {
-        const session = await getServerSession()
-
-        if (!session) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            )
-        }
-
+        const params = await props.params;
         const data = await request.json()
 
+        // Nejprve aktualizujeme základní data zkušenosti
         const experience = await prisma.experience.update({
             where: {
                 id: parseInt(params.id)
@@ -58,48 +43,63 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
             data: {
                 company: data.company,
                 position: data.position,
-                period: data.period,
                 description: data.description,
-                responsibilities: data.responsibilities,
+                startDate: new Date(data.startDate),
+                endDate: data.endDate ? new Date(data.endDate) : null,
+                isPresent: data.isPresent,
                 order: data.order,
                 isPublished: data.isPublished
             }
         })
 
-        return NextResponse.json(experience)
-    } catch (error) {
-        return NextResponse.json(
-            { error: 'Failed to update experience' },
-            { status: 500 }
+        // Smažeme všechny existující projekty
+        await prisma.project.deleteMany({
+            where: {
+                experienceId: parseInt(params.id)
+            }
+        })
+
+        // Vytvoříme nové projekty
+        const updatedProjects = await Promise.all(
+            data.projects.map((project: any) =>
+                prisma.project.create({
+                    data: {
+                        experienceId: experience.id,
+                        title: project.title,
+                        description: project.description,
+                        technologies: project.technologies,
+                        startDate: project.starDate ? new Date(project.startDate): null,
+                        endDate: project.endDate ? new Date(project.endDate) : null,
+                        isPresent: project.isPresent,
+                        order: project.order,
+                        isPublished: project.isPublished
+                    }
+                })
+            )
         )
+
+        return NextResponse.json({ ...experience, projects: updatedProjects })
+    } catch (error) {
+        console.error('Error updating experience:', error)
+        return NextResponse.json({ error: 'Error updating experience' }, { status: 500 })
     }
 }
 
-export async function DELETE(request: Request, props: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+    request: Request,
+    props: { params: Promise<{ id: string }> }
+) {
     const params = await props.params;
     try {
-        const session = await getServerSession()
-
-        if (!session) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            )
-        }
-
         await prisma.experience.delete({
             where: {
                 id: parseInt(params.id)
             }
         })
 
-        return NextResponse.json(
-            { message: 'Experience deleted successfully' }
-        )
+        return NextResponse.json({ status: 'ok' })
     } catch (error) {
-        return NextResponse.json(
-            { error: 'Failed to delete experience' },
-            { status: 500 }
-        )
+        console.error('Error deleting experience:', error)
+        return NextResponse.json({ error: 'Error deleting experience' }, { status: 500 })
     }
 }

@@ -1,9 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import {
-    Briefcase,
     Award,
     Code,
     ChevronRight,
@@ -19,16 +17,13 @@ interface SectionStats {
 }
 
 interface DashboardData {
-    projects: SectionStats
     experience: SectionStats
     skills: SectionStats
     certificates: SectionStats
 }
 
 export default function DashboardPage() {
-    const router = useRouter()
     const [stats, setStats] = useState<DashboardData>({
-        projects: { total: 0, published: 0 },
         experience: { total: 0, published: 0 },
         skills: { total: 0, published: 0 },
         certificates: { total: 0, published: 0 }
@@ -42,9 +37,8 @@ export default function DashboardPage() {
 
     const fetchStats = async () => {
         try {
-            const sections = ['projects', 'experience', 'skills', 'certificates']
+            const sections = ['experience', 'skills', 'certificates']
             const statsData: DashboardData = {
-                projects: { total: 0, published: 0 },
                 experience: { total: 0, published: 0 },
                 skills: { total: 0, published: 0 },
                 certificates: { total: 0, published: 0 }
@@ -64,6 +58,7 @@ export default function DashboardPage() {
 
             setStats(statsData)
         } catch (err) {
+            console.error('Error fetching dashboard data:', err)
             setError('Failed to load dashboard data')
         } finally {
             setIsLoading(false)
@@ -71,13 +66,6 @@ export default function DashboardPage() {
     }
 
     const sections = [
-        {
-            name: 'Projects',
-            path: '/admin/projects',
-            icon: Briefcase,
-            stats: stats.projects,
-            color: 'bg-blue-500'
-        },
         {
             name: 'Work Experience',
             path: '/admin/experience',
@@ -160,13 +148,6 @@ export default function DashboardPage() {
             <div className="mt-8 bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <a
-                        href="/admin/projects/new"
-                        className="flex items-center p-4 border rounded-lg hover:bg-gray-50"
-                    >
-                        <Briefcase className="w-5 h-5 text-red-700 mr-3" />
-                        <span>Add New Project</span>
-                    </a>
                     <a
                         href="/admin/experience/new"
                         className="flex items-center p-4 border rounded-lg hover:bg-gray-50"

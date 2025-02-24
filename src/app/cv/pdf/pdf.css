@@ -1,0 +1,49 @@
+/* src/app/cv/pdf/pdf.css */
+.pdf-container {
+    width: 100%;
+    max-width: 1000px; /* Dobrá šířka pro čtení */
+    margin: 0 auto;
+    background: white;
+    min-height: 100vh;
+}
+
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    /* Zajistíme, že gradient a barvy budou vytištěny */
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Zajistíme, že gradient a barvy budou vytištěny */
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Vylepšené page breaks */
+    section {
+        break-inside: avoid;
+    }
+
+    h2 {
+        break-after: avoid;
+    }
+
+    .experience-item {
+        break-inside: avoid;
+    }
+}
+
+/* Stíny a efekty pro náhled v prohlížeči */
+@media screen {
+    .pdf-container {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+    }
+}

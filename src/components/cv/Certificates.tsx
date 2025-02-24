@@ -3,6 +3,7 @@ interface Certificate {
     id: number
     name: string
     issuer: string
+    period: string
     skills: string[]
 }
 
@@ -18,7 +19,7 @@ export function Certificates({ certificates }: Props) {
                 {certificates.map((cert) => (
                     <div key={cert.id} className="border rounded-lg p-4">
                         <h3 className="font-semibold text-gray-900">{cert.name}</h3>
-                        <p className="text-gray-600">{cert.issuer}</p>
+                        <p className="text-gray-600">{cert.issuer}  <small>({cert.period})</small></p>
                         <div className="mt-2 flex flex-wrap gap-2">
                             {cert.skills.map((skill, index) => (
                                 <span

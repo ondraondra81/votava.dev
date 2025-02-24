@@ -2,5 +2,6 @@
 import EditExperiencePage from '../[id]/edit/page'
 
 export default function NewExperiencePage() {
-    return <EditExperiencePage params={{ id: 'new' }} />
+    const params = Promise.resolve({ id: 'new' })
+    return <EditExperiencePage params={params} />
 }

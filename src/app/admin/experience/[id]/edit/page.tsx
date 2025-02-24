@@ -1,58 +1,64 @@
 // src/app/admin/experience/[id]/edit/page.tsx
 'use client'
 
-import { useState, useEffect, use } from 'react';
+import {use, useEffect} from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Plus, Minus } from 'lucide-react'
-
-interface ExperienceFormData {
-    company: string
-    position: string
-    period: string
-    description: string
-    responsibilities: string[]
-    order: number
-    isPublished: boolean
-}
+import { ArrowLeft } from 'lucide-react'
+import { RichTextEditor } from '@/components/form/RichTextEditor'
+import { ProjectsSection } from '@/components/form/cv/ProjectsSection'
+import type { Experience, Project } from '@/types/experience'
+import {MonthYearPicker} from "@/components/form/MonthYearPicker";
 
 export default function EditExperiencePage(props: { params: Promise<{ id: string }> }) {
-    const params = use(props.params);
+    const params = use(props.params)
     const router = useRouter()
-    const [formData, setFormData] = useState<ExperienceFormData>({
+    const [formData, setFormData] = useState<Experience>({
         company: '',
         position: '',
-        period: '',
         description: '',
-        responsibilities: [''],
+        startDate: '',
+        endDate: '',
+        isPresent: false,
+        projects: [],
         order: 0,
-        isPublished: false
+        isPublished: true
     })
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
     const [isSaving, setIsSaving] = useState(false)
 
-    useEffect(() => {
-        if (params.id !== 'new') {
-            fetchExperience()
-        } else {
-            setIsLoading(false)
-        }
-    }, [params.id])
-
-    const fetchExperience = async () => {
+    const fetchExperienceAction = async () => {
         try {
             const response = await fetch(`/api/admin/experience/${params.id}`)
             if (!response.ok) throw new Error('Failed to fetch experience')
             const data = await response.json()
             setFormData(data)
         } catch (err) {
+            console.error(err)
             setError('Failed to load experience')
         } finally {
             setIsLoading(false)
         }
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    useEffect(() => {
+        if (params.id !== 'new') {
+            fetchExperienceAction()
+        } else {
+            setIsLoading(false)  // Pro nový záznam nastavíme loading na false
+        }
+    }, [params.id])  // Dependency array s params.id
+
+    const handleProjectChangeAction = async (projects: Project[]) => {
+        setFormData(prev => ({ ...prev, projects }))
+    }
+
+    const updateExperienceAction = async (data: Partial<Experience>) => {
+        setFormData(prev => ({ ...prev, ...data }))
+    }
+
+    const handleSubmitAction = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsSaving(true)
 
@@ -72,7 +78,6 @@ export default function EditExperiencePage(props: { params: Promise<{ id: string
             })
 
             if (!response.ok) throw new Error('Failed to save experience')
-
             router.push('/admin/experience')
         } catch (err) {
             setError('Failed to save experience')
@@ -81,45 +86,11 @@ export default function EditExperiencePage(props: { params: Promise<{ id: string
         }
     }
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }))
-    }
-
-    const handleResponsibilityChange = (index: number, value: string) => {
-        const newResponsibilities = [...formData.responsibilities]
-        newResponsibilities[index] = value
-        setFormData(prev => ({
-            ...prev,
-            responsibilities: newResponsibilities
-        }))
-    }
-
-    const addResponsibility = () => {
-        setFormData(prev => ({
-            ...prev,
-            responsibilities: [...prev.responsibilities, '']
-        }))
-    }
-
-    const removeResponsibility = (index: number) => {
-        if (formData.responsibilities.length > 1) {
-            const newResponsibilities = formData.responsibilities.filter((_, i) => i !== index)
-            setFormData(prev => ({
-                ...prev,
-                responsibilities: newResponsibilities
-            }))
-        }
-    }
-
     if (isLoading) return <div>Loading...</div>
     if (error) return <div>Error: {error}</div>
 
     return (
-        <div className="max-w-2xl mx-auto py-8">
+        <div className="max-w-4xl mx-auto py-8">
             <div className="flex items-center mb-6">
                 <button
                     onClick={() => router.push('/admin/experience')}
@@ -132,134 +103,101 @@ export default function EditExperiencePage(props: { params: Promise<{ id: string
                 </h1>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                        Company
-                    </label>
-                    <input
-                        type="text"
-                        name="company"
-                        value={formData.company}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
-                        required
-                    />
-                </div>
+            <form onSubmit={handleSubmitAction} className="space-y-6">
+                <div className="grid grid-cols-1 gap-6">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Company</label>
+                        <input
+                            type="text"
+                            value={formData.company}
+                            onChange={async (e) => await updateExperienceAction({ company: e.target.value })}
+                            className="mt-1 block w-full rounded-md border border-gray-300 bg-white"
+                            required
+                        />
+                    </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                        Position
-                    </label>
-                    <input
-                        type="text"
-                        name="position"
-                        value={formData.position}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
-                        required
-                    />
-                </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Position</label>
+                        <input
+                            type="text"
+                            value={formData.position}
+                            onChange={async (e) => await updateExperienceAction({ position: e.target.value })}
+                            className="mt-1 block w-full rounded-md border border-gray-300 bg-white"
+                            required
+                        />
+                    </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                        Period
-                    </label>
-                    <input
-                        type="text"
-                        name="period"
-                        value={formData.period}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
-                        required
-                    />
-                </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Description</label>
+                        <RichTextEditor
+                            content={formData.description}
+                            onChangeAction={async (content) => await updateExperienceAction({ description: content })}
+                            placeholder="Enter role description..."
+                        />
+                    </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                        Description
-                    </label>
-                    <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleInputChange}
-                        rows={4}
-                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Responsibilities
-                    </label>
-                    {formData.responsibilities.map((responsibility, index) => (
-                        <div key={index} className="flex gap-2 mb-2">
-                            <input
-                                type="text"
-                                value={responsibility}
-                                onChange={(e) => handleResponsibilityChange(index, e.target.value)}
-                                className="flex-1 rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
-                                required
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Start Date</label>
+                            <MonthYearPicker
+                                value={formData.startDate}
+                                onChangeAction={async (value) => await updateExperienceAction({ startDate: value })}
+                                required={true}
                             />
-                            <button
-                                type="button"
-                                onClick={() => removeResponsibility(index)}
-                                className="text-gray-600 hover:text-red-700"
-                                disabled={formData.responsibilities.length === 1}
-                            >
-                                <Minus className="w-4 h-4" />
-                            </button>
                         </div>
-                    ))}
-                    <button
-                        type="button"
-                        onClick={addResponsibility}
-                        className="mt-2 text-red-700 hover:text-red-800 flex items-center"
-                    >
-                        <Plus className="w-4 h-4 mr-1" />
-                        Add Responsibility
-                    </button>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">End Date</label>
+                            <MonthYearPicker
+                                value={formData.endDate}
+                                onChangeAction={async (value) => await updateExperienceAction({ endDate: value })}
+                                disabled={formData.isPresent}
+                            />
+                            <div className="mt-2">
+                                <input
+                                    type="checkbox"
+                                    checked={formData.isPresent}
+                                    onChange={async (e) => await updateExperienceAction({
+                                        isPresent: e.target.checked,
+                                        endDate: e.target.checked ? null : formData.endDate
+                                    })}
+                                    className="mr-2"
+                                />
+                                <label className="text-sm text-gray-600">Current Position</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center">
+                        <input
+                            type="checkbox"
+                            checked={formData.isPublished}
+                            onChange={async (e) => await updateExperienceAction({ isPublished: e.target.checked })}
+                            className="h-4 w-4 text-red-700 focus:ring-red-500 border-gray-300 rounded bg-white"
+                        />
+                        <label className="ml-2 block text-sm text-gray-700">
+                            Published
+                        </label>
+                    </div>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                        Order
-                    </label>
-                    <input
-                        type="number"
-                        name="order"
-                        value={formData.order}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
-                    />
-                </div>
-
-                <div className="flex items-center">
-                    <input
-                        type="checkbox"
-                        name="isPublished"
-                        checked={formData.isPublished}
-                        onChange={(e) => setFormData(prev => ({ ...prev, isPublished: e.target.checked }))}
-                        className="h-4 w-4 text-red-700 focus:ring-red-500 border-gray-300 rounded"
-                    />
-                    <label className="ml-2 block text-sm text-gray-700">
-                        Published
-                    </label>
-                </div>
+                <ProjectsSection
+                    projects={formData.projects}
+                    onProjectChangeAction={handleProjectChangeAction}
+                />
 
                 <div className="flex justify-end space-x-4">
                     <button
                         type="button"
                         onClick={() => router.push('/admin/experience')}
-                        className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                        className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         disabled={isSaving}
-                        className="bg-red-700 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                        className="bg-red-700 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-red-800"
                     >
                         {isSaving ? 'Saving...' : 'Save'}
                     </button>

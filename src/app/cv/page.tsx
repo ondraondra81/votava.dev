@@ -2,14 +2,12 @@
 import {
     getContact,
     getProfile,
-    getProjects,
     getExperience,
     getSkills,
     getCertificates
 } from '@/lib/dataProviders'
 import { CVHeader } from '@/components/cv/CVHeader'
 import { Profile } from '@/components/cv/Profile'
-import { Projects } from '@/components/cv/Projects'
 import { Experience } from '@/components/cv/Experience'
 import { Skills } from '@/components/cv/Skills'
 import { Certificates } from '@/components/cv/Certificates'
@@ -17,28 +15,26 @@ import { Footer } from '@/components/Footer'
 
 export default async function CVPage() {
     // Načteme všechna data paralelně
-    const [contact, profile, projects, experience, skills, certificates] = await Promise.all([
+    const [contact, profile, experiences, skills, certificates] = await Promise.all([
         getContact(),
         getProfile(),
-        getProjects(),
         getExperience(),
         getSkills(),
-        getCertificates()
+        getCertificates(),
     ])
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <CVHeader contact={contact} />
+            <CVHeader contact={contact}/>
             <main className="max-w-5xl mx-auto px-4 py-8">
-                <Profile profile={profile} />
-                <Projects projects={projects} />
-                <Experience experience={experience} />
-                <Skills skills={skills} />
-                <Certificates certificates={certificates} />
+                <Profile profile={profile}/>
+                <Experience experiences={experiences}/>
+                <Skills skills={skills}/>
+                <Certificates certificates={certificates}/>
             </main>
-            <Footer />
+            <Footer/>
         </div>
-    )
+    );
 }
 
 // Metadata pro lepší SEO

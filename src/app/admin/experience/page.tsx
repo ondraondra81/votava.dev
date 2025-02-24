@@ -2,20 +2,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { PlusCircle, Pencil, Trash2 } from 'lucide-react'
-
-interface Experience {
-    id: number
-    company: string
-    position: string
-    period: string
-    description: string
-    responsibilities: string[]
-    order: number
-    isPublished: boolean
-}
+import { formatPeriod } from '@/lib/utils'
+import type {Experience} from "@/types/experience";
 
 export default function ExperiencePage() {
+    const router = useRouter()
     const [experiences, setExperiences] = useState<Experience[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
@@ -31,6 +24,7 @@ export default function ExperiencePage() {
             const data = await response.json()
             setExperiences(data)
         } catch (err) {
+            console.error('Error fetching experiences:', err)
             setError('Failed to load experiences')
         } finally {
             setIsLoading(false)
@@ -46,12 +40,13 @@ export default function ExperiencePage() {
             })
 
             if (!response.ok) throw new Error('Failed to delete experience')
-
             setExperiences(experiences.filter(exp => exp.id !== id))
         } catch (err) {
+            console.error('Error deleting experience:', err)
             setError('Failed to delete experience')
         }
     }
+
 
     if (isLoading) return <div>Loading...</div>
     if (error) return <div>Error: {error}</div>
@@ -60,13 +55,13 @@ export default function ExperiencePage() {
         <div>
             <div className="mb-6 flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Work Experience</h1>
-                <a
-                    href="/admin/experience/new"
+                <button
+                    onClick={() => router.push('/admin/experience/new')}
                     className="bg-red-700 text-white px-4 py-2 rounded-lg flex items-center hover:bg-red-800"
                 >
                     <PlusCircle className="w-4 h-4 mr-2" />
                     Add Experience
-                </a>
+                </button>
             </div>
 
             <div className="bg-white rounded-lg shadow">
@@ -84,9 +79,12 @@ export default function ExperiencePage() {
                                 Period
                             </th>
                             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status
+                                Projects
                             </th>
                             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th className="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
@@ -101,32 +99,37 @@ export default function ExperiencePage() {
                                     {experience.position}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {experience.period}
+                                    {formatPeriod(
+                                        experience.startDate,
+                                        experience.endDate,
+                                        experience.isPresent
+                                    )}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {experience.projects.length}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                            experience.isPublished
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-yellow-100 text-yellow-800'
-                                        }`}>
-                                            {experience.isPublished ? 'Published' : 'Draft'}
-                                        </span>
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        experience.isPublished
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {experience.isPublished ? 'Published' : 'Draft'}
+                    </span>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <div className="flex space-x-2">
-                                        <a
-                                            href={`/admin/experience/${experience.id}/edit`}
-                                            className="text-gray-600 hover:text-red-700"
-                                        >
-                                            <Pencil className="w-4 h-4" />
-                                        </a>
-                                        <button
-                                            onClick={() => handleDelete(experience.id)}
-                                            className="text-gray-600 hover:text-red-700"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                    </div>
+                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button
+                                        onClick={() => router.push(`/admin/experience/${experience.id}/edit`)}
+                                        className="text-gray-600 hover:text-red-700 mr-4"
+                                    >
+                                        <Pencil className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(experience.id)}
+                                        className="text-gray-600 hover:text-red-700"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
                                 </td>
                             </tr>
                         ))}

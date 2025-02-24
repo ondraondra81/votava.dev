@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
-import { use } from 'react'
 
 interface SkillFormData {
     name: string
@@ -21,8 +20,8 @@ const PREDEFINED_CATEGORIES = [
 ]
 
 export default function EditSkillPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = use(params)
     const router = useRouter()
+    const [id, setId] = useState<string | null>(null)
     const [formData, setFormData] = useState<SkillFormData>({
         name: '',
         description: '',
@@ -38,19 +37,31 @@ export default function EditSkillPage({ params }: { params: Promise<{ id: string
     const [showNewCategoryInput, setShowNewCategoryInput] = useState(false)
 
     useEffect(() => {
-        if (id !== 'new') {
-            fetchSkill()
-        } else {
-            setIsLoading(false)
-        }
-    }, [id])
+        params.then(({ id }) => {
+            setId(id)
+            if (id !== 'new') {
+                fetchSkill(id)
+            } else {
+                setIsLoading(false)
+            }
+        })
+    }, [params])
 
-    const fetchSkill = async () => {
+    const fetchSkill = async (skillId: string) => {
         try {
-            const response = await fetch(`/api/admin/skills/${id}`)
+            const response = await fetch(`/api/admin/skills/${skillId}`)
             if (!response.ok) throw new Error('Failed to fetch skill')
+
             const data = await response.json()
-            setFormData(data)
+            setFormData({
+                name: data.name || '',
+                description: data.description || '',
+                level: data.level ?? 75,
+                category: data.category || PREDEFINED_CATEGORIES[0],
+                order: data.order ?? 0,
+                isPublished: data.isPublished ?? false
+            })
+
             if (!PREDEFINED_CATEGORIES.includes(data.category)) {
                 setShowNewCategoryInput(true)
                 setNewCategory(data.category)
@@ -98,11 +109,11 @@ export default function EditSkillPage({ params }: { params: Promise<{ id: string
         const { name, value, type } = e.target
         setFormData(prev => ({
             ...prev,
-            [name]: type === 'number' ? Number(value) : value
+            [name]: type === 'number' || type === 'range' ? Number(value) : value
         }))
     }
 
-    if (isLoading) return <div>Loading...</div>
+    if (!id || isLoading) return <div>Loading...</div>
     if (error) return <div>Error: {error}</div>
 
     return (
@@ -133,6 +144,7 @@ export default function EditSkillPage({ params }: { params: Promise<{ id: string
                         required
                     />
                 </div>
+
                 <div>
                     <label className="block text-sm font-medium text-gray-700">
                         Description
@@ -170,38 +182,38 @@ export default function EditSkillPage({ params }: { params: Promise<{ id: string
                         Category
                     </label>
                     <div className="mt-1 space-y-2">
-                        <select
-                            name="category"
-                            value={showNewCategoryInput ? 'other' : formData.category}
-                            onChange={(e) => {
-                                if (e.target.value === 'other') {
-                                    setShowNewCategoryInput(true)
-                                    setNewCategory('')
-                                } else {
-                                    setShowNewCategoryInput(false)
-                                    handleInputChange(e)
-                                }
-                            }}
-                            className="block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
-                        >
-                            {PREDEFINED_CATEGORIES.map(category => (
-                                <option key={category} value={category}>
-                                    {category}
-                                </option>
-                            ))}
-                            <option value="other">Other...</option>
-                        </select>
+                    <select
+                        name="category"
+                        value={showNewCategoryInput ? 'other' : formData.category}
+                        onChange={(e) => {
+                            if (e.target.value === 'other') {
+                                setShowNewCategoryInput(true)
+                                setNewCategory('')
+                            } else {
+                                setShowNewCategoryInput(false)
+                                handleInputChange(e)
+                            }
+                        }}
+                        className="block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
+                    >
+                        {PREDEFINED_CATEGORIES.map(category => (
+                            <option key={category} value={category}>
+                                {category}
+                            </option>
+                        ))}
+                        <option value="other">Other...</option>
+                    </select>
 
-                        {showNewCategoryInput && (
-                            <input
-                                type="text"
-                                value={newCategory}
-                                onChange={(e) => setNewCategory(e.target.value)}
-                                placeholder="Enter new category"
-                                className="block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
-                                required
-                            />
-                        )}
+                    {showNewCategoryInput && (
+                        <input
+                            type="text"
+                            value={newCategory}
+                            onChange={(e) => setNewCategory(e.target.value)}
+                            placeholder="Enter new category"
+                            className="block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-red-500 focus:ring-red-500"
+                            required
+                        />
+                    )}
                     </div>
                 </div>
 
@@ -239,13 +251,13 @@ export default function EditSkillPage({ params }: { params: Promise<{ id: string
                     >
                         Cancel
                     </button>
-                    <button
-                        type="submit"
-                        disabled={isSaving}
-                        className="bg-red-700 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    >
-                        {isSaving ? 'Saving...' : 'Save'}
-                    </button>
+                <button
+                    type="submit"
+                    disabled={isSaving}
+                    className="bg-red-700 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                    {isSaving ? 'Saving...' : 'Save'}
+                </button>
                 </div>
             </form>
         </div>
