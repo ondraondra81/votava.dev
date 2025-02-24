@@ -9,7 +9,7 @@ services:
             - DATABASE_URL=${project.DATABASE_URL}
             - NEXTAUTH_SECRET=${project.NEXTAUTH_SECRET}
             - NEXT_PUBLIC_BASE_URL=${$COOLIFY_URL}
-            - NEXTAUTH_URL=${$COOLIFY_URL}
+            - NEXTAUTH_URL=${COOLIFY_URL}
             - PUPPETEER_URL=http://web:3000
         depends_on:
             - db
