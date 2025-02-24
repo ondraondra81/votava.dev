@@ -1,0 +1,27 @@
+services:
+    web:
+        build:
+            context: ./
+            dockerfile: docker/Dockerfile.prod
+        image: votava.dev:latest
+        environment:
+            - NODE_ENV=production
+            - DATABASE_URL=${project.DATABASE_URL}
+            - NEXTAUTH_SECRET=${project.NEXTAUTH_SECRET}
+            - NEXT_PUBLIC_BASE_URL=${$COOLIFY_URL}
+            - NEXTAUTH_URL=${$COOLIFY_URL}
+            - PUPPETEER_URL=http://web:3000
+        depends_on:
+            - db
+        restart: unless-stopped
+
+    db:
+        image: postgres:15-alpine
+        environment:
+            - POSTGRES_USER=${project.POSTGRES_USER}
+            - POSTGRES_PASSWORD=${project.POSTGRES_PASSWORD}
+            - POSTGRES_DB=ov_website
+            - PGDATA=/var/lib/postgresql/data/pgdata
+        volumes:
+            - ./storage/postgresql/data:/var/lib/postgresql/data
+        restart: unless-stopped
