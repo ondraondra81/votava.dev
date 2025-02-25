@@ -21,18 +21,6 @@ services:
             - 'traefik.http.middlewares.redirect-apex-to-ondra.redirectregex.regex=^https?://votava\.dev(.*)'
             - 'traefik.http.middlewares.redirect-apex-to-ondra.redirectregex.replacement=https://ondra.votava.dev$1'
             - 'traefik.http.middlewares.redirect-apex-to-ondra.redirectregex.permanent=true'
-
-            # Nastavení routeru pro www doménu s použitím middleware
-            - 'traefik.http.routers.www-router.rule=Host(`www.votava.dev`)'
-            - 'traefik.http.routers.www-router.middlewares=redirect-www-to-ondra'
-            - 'traefik.http.routers.www-router.entrypoints=websecure'
-            - 'traefik.http.routers.www-router.tls=true'
-
-            # Nastavení routeru pro apex doménu s použitím middleware
-            - 'traefik.http.routers.apex-router.rule=Host(`votava.dev`)'
-            - 'traefik.http.routers.apex-router.middlewares=redirect-apex-to-ondra'
-            - 'traefik.http.routers.apex-router.entrypoints=websecure'
-            - 'traefik.http.routers.apex-router.tls=true'
         depends_on:
             - db
         restart: unless-stopped
