@@ -11,6 +11,13 @@ services:
             - NEXT_PUBLIC_BASE_URL=${APP_URL}
             - NEXTAUTH_URL=${APP_URL}
             - PUPPETEER_URL=http://web:3000
+        labels:
+            - 'traefik.http.middlewares.redirectwwwvotavadev-middleware.redirectregex.regex=^(http|https)://www\.(.+)'
+            - 'traefik.http.middlewares.redirectwwwvotavadev-middleware.redirectregex.replacement=${APP_URL}'
+            - 'traefik.http.middlewares.redirectwwwvotavadev-middleware.redirectregex.permanent=true'
+            - 'traefik.http.middlewares.redirectvotavadev-middleware.redirectregex.regex=^(http|https)://(?:www\.)?(.+)'
+            - 'traefik.http.middlewares.redirectvotavadev-middleware.redirectregex.replacement=${APP_URL}'
+            - 'traefik.http.middlewares.redirectvotavadev-middleware.redirectregex.permanent=true'
         depends_on:
             - db
         restart: unless-stopped
