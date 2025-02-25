@@ -14,12 +14,12 @@ services:
         labels:
             # Middleware pro přesměrování z www.votava.dev na ondra.votava.dev
             - 'traefik.http.middlewares.redirect-www-to-ondra.redirectregex.regex=^https?://www\.votava\.dev(.*)'
-            - 'traefik.http.middlewares.redirect-www-to-ondra.redirectregex.replacement=https://ondra.votava.dev$$1'
+            - 'traefik.http.middlewares.redirect-www-to-ondra.redirectregex.replacement=https://ondra.votava.dev$1'
             - 'traefik.http.middlewares.redirect-www-to-ondra.redirectregex.permanent=true'
 
             # Middleware pro přesměrování z votava.dev na ondra.votava.dev
             - 'traefik.http.middlewares.redirect-apex-to-ondra.redirectregex.regex=^https?://votava\.dev(.*)'
-            - 'traefik.http.middlewares.redirect-apex-to-ondra.redirectregex.replacement=https://ondra.votava.dev$$1'
+            - 'traefik.http.middlewares.redirect-apex-to-ondra.redirectregex.replacement=https://ondra.votava.dev$1'
             - 'traefik.http.middlewares.redirect-apex-to-ondra.redirectregex.permanent=true'
 
             # Nastavení routeru pro www doménu s použitím middleware
