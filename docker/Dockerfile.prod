@@ -21,7 +21,6 @@ WORKDIR /app
 
 # Kopírování pouze package souborů
 COPY package.json pnpm-lock.yaml* ./
-COPY docker/entrypoint.sh ./
 
 # Instalace s vyčištěním cache po instalaci
 RUN pnpm install --frozen-lockfile \
@@ -67,7 +66,7 @@ ENV NODE_ENV=production \
 
 EXPOSE 3000
 
-COPY --from=builder /app/entrypoint.sh ./
-RUN chmod +x entrypoint.sh
-
-CMD ["entrypoint.sh"]
+CMD echo "Running database migrations..." && \
+    npx prisma migrate deploy && \
+    echo "Starting application..." && \
+    node server.js
