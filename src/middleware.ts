@@ -15,6 +15,13 @@ export default withAuth(
             return NextResponse.redirect(new URL("/auth/login", req.url))
         }
 
+        if (!token && req.nextUrl.pathname.startsWith("/api/admin/")) {
+            return NextResponse.json(
+                { error: 'Unauthorized' },
+                { status: 401 }
+            )
+        }
+
         return NextResponse.next()
     },
     {
@@ -30,5 +37,5 @@ export default withAuth(
 )
 
 export const config = {
-    matcher: ["/admin/:path*", "/auth/:path*"]
+    matcher: ["/admin/:path*", "/auth/:path*", "/api/admin/:path*"]
 }

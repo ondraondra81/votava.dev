@@ -15,7 +15,6 @@ export async function GET() {
         })
         return NextResponse.json(experiences)
     } catch (error) {
-        console.error('Error fetching experiences:', error)
         return NextResponse.json({ error: 'Error fetching experiences' }, { status: 500 })
     }
 }
@@ -32,6 +31,7 @@ export async function POST(request: Request) {
                 startDate: data.startDate ? new Date(data.startDate) : null,
                 endDate: data.endDate ? new Date(data.endDate) : null,
                 isPresent: data.isPresent,
+                technologies: data.technologies || [],
                 order: data.order,
                 isPublished: data.isPublished,
                 projects: {
@@ -54,7 +54,6 @@ export async function POST(request: Request) {
 
         return NextResponse.json(experience)
     } catch (error) {
-        console.error('Error creating experience:', error)
         return NextResponse.json({ error: 'Error creating experience' }, { status: 500 })
     }
 }

@@ -18,6 +18,7 @@ export interface Experience {
     startDate: string
     endDate?: string
     isPresent: boolean
+    technologies: string[]
     projects: Project[]
     order: number
     isPublished: boolean

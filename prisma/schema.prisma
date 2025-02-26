@@ -19,43 +19,44 @@ model User {
 
 model Profile {
   id        Int      @id @default(autoincrement())
-  title     String   // např. "Senior IT & Business Analyst"
-  summary   String   @db.Text  // delší popis
-  motto     String   @db.Text  // delší popis
+  title     String
+  summary   String   @db.Text
+  motto     String   @db.Text
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Experience {
-  id          Int       @id @default(autoincrement())
-  company     String
-  position    String
-  description Json      // For rich text content
-  startDate   DateTime
-  endDate     DateTime?
-  isPresent   Boolean   @default(false)
-  projects    Project[]
-  order       Int       @default(0)
-  isPublished Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           Int       @id @default(autoincrement())
+  company      String
+  position     String
+  description  Json
+  startDate    DateTime
+  endDate      DateTime?
+  isPresent    Boolean   @default(false)
+  technologies String[]
+  projects     Project[]
+  order        Int       @default(0)
+  isPublished  Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model Project {
-  id            Int         @id @default(autoincrement())
-  title         String
-  description   Json       // For rich text content
-  technologies  String[]   // Array of tech stack
-  startDate     DateTime?  // Změněno na volitelné
-  endDate       DateTime?  // Už bylo volitelné
-  isPresent     Boolean     @default(false)
-  experience    Experience  @relation(fields: [experienceId], references: [id], onDelete: Cascade)
-  experienceId  Int
-  order         Int        @default(0)
-  isPublished   Boolean    @default(false)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  id           Int        @id @default(autoincrement())
+  title        String
+  description  Json
+  technologies String[]
+  startDate    DateTime?
+  endDate      DateTime?
+  isPresent    Boolean    @default(false)
+  experience   Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  experienceId Int
+  order        Int        @default(0)
+  isPublished  Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 model Skill {
@@ -79,15 +80,15 @@ model Certificate {
 }
 
 model Contact {
-  id          Int      @id @default(autoincrement())
-  name        String
-  position    String
-  email       String?
-  github      String?
-  linkedin    String?
-  phone       String?
-  location    String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  position  String
+  email     String?
+  github    String?
+  linkedin  String?
+  phone     String?
+  location  String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

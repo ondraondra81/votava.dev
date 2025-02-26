@@ -1,19 +1,10 @@
 // src/app/api/certificates/[id]/route.ts
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
 import {prisma} from "@/lib/prisma";
 
 export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     try {
-        const session = await getServerSession()
-
-        if (!session) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            )
-        }
 
         const certificate = await prisma.certificate.findUnique({
             where: {
@@ -40,14 +31,6 @@ export async function GET(request: Request, props: { params: Promise<{ id: strin
 export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     try {
-        const session = await getServerSession()
-
-        if (!session) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            )
-        }
 
         const data = await request.json()
 
@@ -76,14 +59,6 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
 export async function DELETE(request: Request, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     try {
-        const session = await getServerSession()
-
-        if (!session) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            )
-        }
 
         await prisma.certificate.delete({
             where: {

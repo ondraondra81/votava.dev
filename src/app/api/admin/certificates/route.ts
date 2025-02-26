@@ -5,14 +5,6 @@ import {prisma} from "@/lib/prisma";
 
 export async function GET() {
     try {
-        const session = await getServerSession()
-
-        if (!session) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            )
-        }
 
         const certificates = await prisma.certificate.findMany({
             where: {

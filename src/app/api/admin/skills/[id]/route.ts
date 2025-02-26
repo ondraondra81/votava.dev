@@ -1,6 +1,5 @@
 // src/app/api/skills/[id]/route.ts
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
 import {prisma} from "@/lib/prisma";
 
 export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
@@ -31,14 +30,6 @@ export async function GET(request: Request, props: { params: Promise<{ id: strin
 export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     try {
-        const session = await getServerSession()
-
-        if (!session) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            )
-        }
         const data = await request.json()
 
         const skill = await prisma.skill.update({
@@ -57,7 +48,6 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
 
         return NextResponse.json(skill)
     } catch (error) {
-        console.log(error)
         return NextResponse.json(
             { error: 'Failed to update skill' },
             { status: 500 }
@@ -68,15 +58,6 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
 export async function DELETE(request: Request, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     try {
-        const session = await getServerSession()
-
-        if (!session) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            )
-        }
-
         await prisma.skill.delete({
             where: {
                 id: parseInt(params.id)

@@ -33,6 +33,21 @@ export function Experience({ experiences }: Props) {
                             </div>
                             <div className="mt-2 text-gray-600" dangerouslySetInnerHTML={{ __html: exp.description }}></div>
 
+                            {exp.technologies.length > 0 && (
+                                <div className="mt-3">
+                                    <div className="flex flex-wrap gap-2">
+                                        {exp.technologies.map((tech, index) => (
+                                            <span
+                                                key={index}
+                                                className="bg-red-50 text-red-700 text-xs px-2 py-1 rounded-full"
+                                            >
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             {exp.projects.length > 0 && (
                                 <div className="mt-6">
                                     <h4 className="text-lg font-semibold text-gray-900">Projekty:</h4>

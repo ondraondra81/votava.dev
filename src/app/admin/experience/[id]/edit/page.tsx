@@ -9,6 +9,7 @@ import { RichTextEditor } from '@/components/form/RichTextEditor'
 import { ProjectsSection } from '@/components/form/cv/ProjectsSection'
 import type { Experience, Project } from '@/types/experience'
 import {MonthYearPicker} from "@/components/form/MonthYearPicker";
+import { TechnologyInput } from "@/components/form/cv/TechnologyInput";
 
 export default function EditExperiencePage(props: { params: Promise<{ id: string }> }) {
     const params = use(props.params)
@@ -20,6 +21,7 @@ export default function EditExperiencePage(props: { params: Promise<{ id: string
         startDate: '',
         endDate: '',
         isPresent: false,
+        technologies: [],
         projects: [],
         order: 0,
         isPublished: true
@@ -133,6 +135,14 @@ export default function EditExperiencePage(props: { params: Promise<{ id: string
                             content={formData.description}
                             onChangeAction={async (content) => await updateExperienceAction({ description: content })}
                             placeholder="Enter role description..."
+                        />
+                    </div>
+                    <div>
+                        <TechnologyInput
+                            technologies={formData.technologies}
+                            onChange={async (newTechnologies) => {
+                                await updateExperienceAction({ technologies: newTechnologies });
+                            }}
                         />
                     </div>
 

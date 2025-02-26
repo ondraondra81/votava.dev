@@ -1,19 +1,9 @@
 // src/app/api/skills/route.ts
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
 import {prisma} from "@/lib/prisma";
 
 export async function GET() {
     try {
-        const session = await getServerSession()
-
-        if (!session) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            )
-        }
-
         const skills = await prisma.skill.findMany({
             orderBy: [
                 {
@@ -38,15 +28,6 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
-        const session = await getServerSession()
-
-        if (!session) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            )
-        }
-
         const data = await request.json()
 
         const skill = await prisma.skill.create({

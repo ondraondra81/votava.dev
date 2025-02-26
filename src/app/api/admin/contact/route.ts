@@ -14,7 +14,6 @@ export async function GET() {
 
         return NextResponse.json(contact);
     } catch (error) {
-        console.error('Error fetching contact:', error);
         return NextResponse.json(
             { error: 'Failed to fetch contact' },
             { status: 500 }
@@ -48,7 +47,6 @@ export async function POST(request: Request) {
 
         return NextResponse.json(contact);
     } catch (error) {
-        console.error('Error creating contact:', error);
         return NextResponse.json(
             { error: 'Failed to create contact' },
             { status: 500 }
@@ -77,7 +75,6 @@ export async function PUT(request: Request) {
 
         return NextResponse.json(contact);
     } catch (error) {
-        console.error('Error updating contact:', error);
         return NextResponse.json(
             { error: 'Failed to update contact' },
             { status: 500 }

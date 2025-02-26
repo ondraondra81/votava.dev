@@ -91,6 +91,19 @@ export default async function PDFVersion() {
                                     dangerouslySetInnerHTML={{ __html: exp.description as string }}
                                 />
 
+                                {exp.technologies && exp.technologies.length > 0 && (
+                                    <div className="mt-2 flex flex-wrap gap-2">
+                                        {exp.technologies.map((tech, index) => (
+                                            <span
+                                                key={index}
+                                                className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full"
+                                            >
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+
                                 {exp.projects && exp.projects.length > 0 && (
                                     <div className="mt-4 space-y-4">
                                         {exp.projects.map((project) => (

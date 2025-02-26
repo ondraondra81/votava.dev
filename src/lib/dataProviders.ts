@@ -56,6 +56,7 @@ export const getExperience = async (): Promise<Experience[]> => {
             startDate: exp.startDate.toISOString().split("T")[0], // Převod Date na "YYYY-MM-DD"
             endDate: exp.endDate ? exp.endDate.toISOString().split("T")[0] : undefined,
             description: parseDescription(exp.description),
+            technologies: exp.technologies || [],
             projects: exp.projects.map(project => ({
                 ...project,
                 description: parseDescription(project.description),

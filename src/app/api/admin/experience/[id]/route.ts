@@ -47,6 +47,7 @@ export async function PUT(
                 startDate: new Date(data.startDate),
                 endDate: data.endDate ? new Date(data.endDate) : null,
                 isPresent: data.isPresent,
+                technologies: data.technologies || [],
                 order: data.order,
                 isPublished: data.isPublished
             }

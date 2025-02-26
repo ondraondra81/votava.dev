@@ -14,7 +14,6 @@ export async function GET() {
 
         return NextResponse.json(profile);
     } catch (error) {
-        console.error('Error fetching profile:', error);
         return NextResponse.json(
             { error: 'Failed to fetch profile' },
             { status: 500 }
@@ -25,7 +24,6 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const data = await request.json();
-        console.log(data);
 
         // Deactivate current active profile if exists
         await prisma.profile.updateMany({
@@ -45,7 +43,6 @@ export async function POST(request: Request) {
 
         return NextResponse.json(profile);
     } catch (error) {
-        console.error('Error creating profile:', error);
         return NextResponse.json(
             { error: 'Failed to create profile' },
             { status: 500 }
@@ -70,7 +67,6 @@ export async function PUT(request: Request) {
 
         return NextResponse.json(profile);
     } catch (error) {
-        console.error('Error updating profile:', error);
         return NextResponse.json(
             { error: 'Failed to update profile' },
             { status: 500 }
