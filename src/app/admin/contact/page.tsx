@@ -2,7 +2,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Github, Linkedin, Mail, Phone, MapPin } from 'lucide-react'
+import {Github, LinkedIn, Mail, Phone, MapPin} from "@/components/icons";
 
 interface ContactData {
     id?: number
@@ -170,7 +170,7 @@ export default function ContactPage() {
                     <div>
                         <label className="block text-sm font-medium text-gray-700">
                             <div className="flex items-center">
-                                <Linkedin className="w-4 h-4 mr-2" />
+                                <LinkedIn className="w-4 h-4 mr-2" />
                                 LinkedIn
                             </div>
                         </label>

@@ -1,6 +1,6 @@
 // src/components/cv/CVHeader.tsx
-import { Github, Linkedin, Mail } from 'lucide-react'
 import { DownloadPDFButton } from './DownloadPDFButton'
+import {Github, LinkedIn, Mail} from "@/components/icons/";
 
 interface Contact {
     name: string
@@ -20,7 +20,7 @@ export function CVHeader({ contact }: Props) {
             <div className="max-w-5xl mx-auto px-4 py-6">
                 <div className="flex justify-between items-start">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900"><a href={"/"}>{contact.name}</a></h1>
+                        <h1 className="text-3xl font-bold text-gray-900"><a href={"/"}>{contact.name || ''}</a></h1>
                         <p className="mt-2 text-xl text-gray-600">{contact.position}</p>
                         <div className="mt-4 flex space-x-4">
                             {contact.github && (
@@ -41,7 +41,7 @@ export function CVHeader({ contact }: Props) {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    <Linkedin className="w-5 h-5 mr-2" />
+                                    <LinkedIn className="w-5 h-5 mr-2" />
                                     LinkedIn
                                 </a>
                             )}

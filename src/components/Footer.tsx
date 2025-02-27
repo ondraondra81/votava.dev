@@ -1,6 +1,7 @@
 // src/components/cv/Footer.tsx
-import { Github, Linkedin, Mail } from 'lucide-react'
 import {getContact} from "@/lib/dataProviders";
+import {Github, LinkedIn, Mail} from "@/components/icons";
+
 
 
 export async function Footer() {
@@ -26,7 +27,7 @@ export async function Footer() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <Linkedin className="w-6 h-6" />
+                            <LinkedIn className="w-6 h-6" />
                         </a>
                         <a
                             href={contact.email}

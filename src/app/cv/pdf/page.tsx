@@ -45,9 +45,17 @@ export default async function PDFVersion() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            GitHub
+                            {contact.github}
                         </a>
                     )}
+                    <a
+                        href="https://github.com/pixidos"
+                        className="bg-white text-red-900 px-4 py-2 rounded-full text-sm font-medium hover:bg-red-50"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        https://github.com/pixidos
+                    </a>
                     {contact.linkedin && (
                         <a
                             href={contact.linkedin}
@@ -55,9 +63,17 @@ export default async function PDFVersion() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            LinkedIn
+                            {contact.linkedin}
                         </a>
                     )}
+                    <a
+                        href="https://ondra.votava.dev"
+                        className="bg-white text-red-900 px-4 py-2 rounded-full text-sm font-medium hover:bg-red-50"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        https://ondra.votava.dev
+                    </a>
                 </div>
             </div>
 

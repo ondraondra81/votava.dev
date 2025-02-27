@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail } from 'lucide-react'
+import {Github, LinkedIn, Mail} from "@/components/icons";
 import Image from 'next/image'
 import ai_programmer from './../../public/images/ai_programmer.png'
 import {getContact, getProfile} from "@/lib/dataProviders";
@@ -51,7 +51,7 @@ export default async function LandingPage() {
                                     rel="noopener noreferrer"
                                     className="text-gray-600 hover:text-red-700"
                                 >
-                                    <Linkedin className="w-6 h-6" />
+                                    <LinkedIn className="w-6 h-6" />
                                 </a>
                                 <a
                                     href="mailto:your.email@domain.com"
