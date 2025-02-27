@@ -36,4 +36,4 @@ services:
             - ./storage/postgresql/data:/var/lib/postgresql/data
         restart: always
         ports:
-            -   "$DB_PORT:5432"
+            -   "${DB_PORT}:5432"
