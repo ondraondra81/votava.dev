@@ -1,0 +1,49 @@
+FROM node:22-slim
+
+# Install pnpm globally
+RUN npm install -g pnpm
+
+# Install essential build tools and runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # Build essentials
+    ca-certificates \
+    curl \
+    netcat-traditional \
+    # Runtime dependencies
+    chromium \
+    fonts-freefont-ttf \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    # Clean up unnecessary files
+    /usr/share/man \
+    /usr/share/doc \
+    && find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en*' -exec rm -rf {} +
+
+# Set environment variables for Node and Puppeteer
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
+# Create app directory with appropriate permissions
+RUN mkdir -p /app && chown -R root:root /app
+
+# Set working directory
+WORKDIR /app
+
+# Add healthcheck capability
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    procps \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Test Chromium installation
+RUN chromium --version
+
+# Create a simple healthcheck script to verify node is working
+RUN echo '#!/bin/sh\nnode --version > /dev/null\nexit $?' > /usr/local/bin/node-healthcheck.sh \
+    && chmod +x /usr/local/bin/node-healthcheck.sh
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD ["/usr/local/bin/node-healthcheck.sh"]

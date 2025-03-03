@@ -2,35 +2,27 @@ services:
     web:
         build:
             context: ./
-            dockerfile: docker/Dockerfile.prod
+            dockerfile: docker/Dockerfile.app
         image: registry.votava.dev/votavadev/votava.dev:latest
         environment:
-            - NODE_ENV=production
             - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+            - NODE_ENV=production
             - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
             - NEXT_PUBLIC_BASE_URL=${APP_URL}
             - NEXTAUTH_URL=${APP_URL}
             - PUPPETEER_URL=http://web:3000
-        labels:
-            # Middleware pro přesměrování z www.votava.dev na ondra.votava.dev
-            - 'traefik.http.middlewares.redirect-www-to-ondra.redirectregex.regex=^https?://www\.votava\.dev(.*)'
-            - 'traefik.http.middlewares.redirect-www-to-ondra.redirectregex.replacement=https://ondra.votava.dev$1'
-            - 'traefik.http.middlewares.redirect-www-to-ondra.redirectregex.permanent=true'
-
-            # Middleware pro přesměrování z votava.dev na ondra.votava.dev
-            - 'traefik.http.middlewares.redirect-apex-to-ondra.redirectregex.regex=^https?://votava\.dev(.*)'
-            - 'traefik.http.middlewares.redirect-apex-to-ondra.redirectregex.replacement=https://ondra.votava.dev$1'
-            - 'traefik.http.middlewares.redirect-apex-to-ondra.redirectregex.permanent=true'
         depends_on:
             db:
                 condition: service_healthy  # Wait for DB to be ready
+        restart: always
         healthcheck:
-            test: [ "CMD", "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}", "http://web:3000" , "|", "grep", "-q", "200" ]
+            test: [ "CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://web:3000 | grep -q '200' && exit 0 || exit 1" ]
             interval: 30s
             timeout: 10s
             retries: 3
-            start_period: 5s
-        restart: always
+            start_period: 20s
+        ports:
+            -   '3000:3000'
 
     db:
         image: postgres:15-alpine

@@ -1,12 +1,26 @@
 import {Github, LinkedIn, Mail} from "@/components/icons";
 import Image from 'next/image'
-import ai_programmer from './../../public/images/ai_programmer.png'
+import ai_programmer_v1 from './../../public/images/ai_programmer.png'
+import ai_programmer_v2 from './../../public/images/ai_programmer_v2.jpeg'
+import ai_programmer_v3 from './../../public/images/ai_programmer_v3.jpeg'
+
 import {getContact, getProfile} from "@/lib/dataProviders";
 import {Footer} from "@/components/Footer";
 
+// Set to dynamic to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
+export const metadata = {
+    title: 'Ondřej Votava - Senior Developer, IT & Business Analyst',
+    description: ''
+}
 
 export default async function LandingPage() {
     const [profile, contact] = await Promise.all([getProfile(), getContact()]);
+    const images = [ai_programmer_v1, ai_programmer_v2, ai_programmer_v3];
+
+    const ai_programmer = images[Math.floor(Math.random() * images.length)];
+
     return (
         <div className="min-h-screen bg-white flex flex-col">
             <div className="container mx-auto px-4 flex-grow flex items-center">

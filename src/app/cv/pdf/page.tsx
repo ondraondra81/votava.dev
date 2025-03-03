@@ -9,6 +9,14 @@ import {
 import { formatPeriod } from "@/lib/utils"
 import type { Experience } from "@/types/experience"
 
+// Set to dynamic to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
+export const metadata = {
+    title: 'Curriculum Vitae',
+    description: 'Exportovaná verze životopisu pro tisk a stažení'
+}
+
 export default async function PDFVersion() {
     const [contact, profile, experiences, skills, certificates] = await Promise.all([
         getContact(),

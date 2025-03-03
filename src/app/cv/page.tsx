@@ -13,6 +13,14 @@ import { Skills } from '@/components/cv/Skills'
 import { Certificates } from '@/components/cv/Certificates'
 import { Footer } from '@/components/Footer'
 
+// Set to dynamic to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
+export const metadata = {
+    title: 'Curriculum Vitae',
+    description: 'Jsem seniorní vývojář s více než 20 lety zkušeností ve vývoji webových aplikací, informačních systémů a e-commerce řešení.'
+}
+
 export default async function CVPage() {
     // Načteme všechna data paralelně
     const [contact, profile, experiences, skills, certificates] = await Promise.all([
@@ -37,8 +45,3 @@ export default async function CVPage() {
     );
 }
 
-// Metadata pro lepší SEO
-export const metadata = {
-    title: 'Ondřej Votava - CV',
-    description: 'Senior IT & Business Analyst s více než 15 lety zkušeností v oblasti analýzy a vývoje informačních systémů.'
-}

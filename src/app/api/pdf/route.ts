@@ -24,7 +24,7 @@ export async function GET() {
             deviceScaleFactor: 1,
         })
 
-        const url = process.env.PUPPETEER_URL || 'http://localhost:3000'
+        const url = process.env.PUPPETEER_URL || 'http://web:3000'
         await page.goto(`${url}/cv/pdf`, {
             waitUntil: 'networkidle0'
         })
@@ -75,6 +75,7 @@ export async function GET() {
             }
         })
     } catch (error) {
+        console.error(error)
         return NextResponse.json(
             { error: 'Failed to generate PDF' },
             { status: 500 }

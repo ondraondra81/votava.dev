@@ -1,19 +1,4 @@
-FROM node:22-alpine
-
-# Instalace PNPM
-RUN npm install -g pnpm
-
-# Instalace závislostí pro Puppeteer
-RUN apk add --no-cache \
-    chromium \
-    nss \
-    freetype \
-    freetype-dev \
-    harfbuzz \
-    ca-certificates \
-    ttf-freefont \
-    nodejs \
-    yarn
+FROM registry.votava.dev/votavadev/base:latest
 
 WORKDIR /app
 

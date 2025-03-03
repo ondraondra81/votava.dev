@@ -14,7 +14,7 @@ export async function Footer() {
                     <p>&copy; {new Date().getFullYear()} {contact.name}</p>
                     <div className="flex space-x-4">
                         <a
-                            href={contact.github}
+                            href={contact?.github || 'https://github.com/ondraondra81'}
                             className="hover:text-gray-300"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -22,7 +22,7 @@ export async function Footer() {
                             <Github className="w-6 h-6" />
                         </a>
                         <a
-                            href={contact.linkedin}
+                            href={contact?.linkedin || '#'}
                             className="hover:text-gray-300"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -30,7 +30,7 @@ export async function Footer() {
                             <LinkedIn className="w-6 h-6" />
                         </a>
                         <a
-                            href={contact.email}
+                            href={contact?.email || '#'}
                             className="hover:text-gray-300"
                         >
                             <Mail className="w-6 h-6" />
