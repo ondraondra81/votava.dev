@@ -25,7 +25,7 @@ services:
             db:
                 condition: service_healthy  # Wait for DB to be ready
         healthcheck:
-            test: [ "CMD", "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}", "http://web:3000" , "|", "grep", "-q", "200" ]
+            test: [ "CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://web:3000 | grep -q '200' && exit 0 || exit 1" ]
             interval: 30s
             timeout: 10s
             retries: 3
@@ -43,7 +43,7 @@ services:
             - ./storage/postgresql/data:/var/lib/postgresql/data
         restart: always
         healthcheck:
-            test: [ "CMD-SHELL", "pg_isready -U votavadev" ]
+            test: [ "CMD-SHELL", "pg_isready -U votavadev -d ov_website" ]
             interval: 5s
             timeout: 5s
             retries: 5
