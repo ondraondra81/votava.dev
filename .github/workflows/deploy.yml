@@ -52,4 +52,4 @@ jobs:
             - name: Spuštění deploye na Coolify
               run: |
                   curl -X POST -H "Authorization: Bearer ${{ secrets.COOLIFY_API_KEY }}" \
-                       ${{ COOLIFY_WEBHOOK_URL }}
+                       ${{ secrets.COOLIFY_WEBHOOK_URL }}
