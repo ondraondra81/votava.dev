@@ -1,8 +1,5 @@
 services:
     web:
-        build:
-            context: ./
-            dockerfile: docker/Dockerfile.app
         image: registry.votava.dev/votavadev/votava.dev:latest
         environment:
             - NODE_ENV=production
