@@ -19,7 +19,15 @@ export async function Footer() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <Github className="w-6 h-6" />
+                            <Github className="w-6 h-6" title={'Personal GitHub'} />
+                        </a>
+                        <a
+                            href={'https://github.com/pixidos'}
+                            className="hover:text-gray-300"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Github className="w-6 h-6" title={'My OSS organization GitHub'} />
                         </a>
                         <a
                             href={contact?.linkedin || '#'}

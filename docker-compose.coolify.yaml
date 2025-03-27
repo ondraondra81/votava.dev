@@ -34,13 +34,13 @@ services:
         environment:
             - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-            - POSTGRES_DB=ov_website
+            - POSTGRES_DB=${POSTGRES_DB}
             - PGDATA=/var/lib/postgresql/data/pgdata
         volumes:
             - ./storage/postgresql/data:/var/lib/postgresql/data
         restart: always
         healthcheck:
-            test: [ "CMD-SHELL", "pg_isready -U votavadev -d ov_website" ]
+            test: [ "CMD-SHELL", "pg_isready -U postgres -d ov_website" ]
             interval: 5s
             timeout: 5s
             retries: 5
