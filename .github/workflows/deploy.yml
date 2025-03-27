@@ -20,8 +20,8 @@ jobs:
               uses: docker/login-action@v3
               with:
                   registry: registry.votava.dev
-                  username: ${{ secrets.REGISTRY_USERNAME }}
-                  password: ${{ secrets.REGISTRY_PASSWORD }}
+                  username: ${{ secrets.PRIVATE_REGISTRY_USERNAME }}
+                  password: ${{ secrets.PRIVATE_REGISTRY_PASSWORD }}
 
             -   name: Extract Docker metadata
                 id: meta
@@ -45,11 +45,11 @@ jobs:
                         NODE_ENV=production
                     cache-from: type=registry,ref=registry.votava.dev/votavadev/votava.dev:buildcache
                     cache-to: type=registry,ref=registry.votava.dev/votavadev/votava.dev:buildcache,mode=max
-    redeploy:
-        runs-on: ubuntu-latest
-        needs: build
-        steps:
-            - name: Spuštění redeploye na Coolify
-              run: |
-                  curl -X POST -H "Authorization: Bearer ${{ secrets.COOLIFY_API_KEY }}" \
-                       https://coolify.votava.dev/api/v1/services/your-service-id/redeploy
+#    redeploy:
+#        runs-on: ubuntu-latest
+#        needs: build
+#        steps:
+#            - name: Spuštění redeploye na Coolify
+#              run: |
+#                  curl -X POST -H "Authorization: Bearer ${{ secrets.COOLIFY_API_KEY }}" \
+#                       https://coolify.votava.dev/api/v1/deploy?uuid=bg0wo4sg4kokgso0cw00c84s&force=false
