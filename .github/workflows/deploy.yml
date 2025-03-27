@@ -52,4 +52,4 @@ jobs:
             - name: Spuštění deploye na Coolify
               run: |
                   curl -X POST -H "Authorization: Bearer ${{ secrets.COOLIFY_API_KEY }}" \
-                       https://coolify.votava.dev/api/v1/deploy?uuid=h0s8cogcgw0c0k04wsko0swc&force=false
+                       ${{ COOLIFY_WEBHOOK_URL }}

@@ -27,7 +27,7 @@ export async function Footer() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <Github className="w-6 h-6" title={'My OSS organization GitHub'} />
+                            <Github className="w-6 h-6" title={'My OSS GitHub organization'} />
                         </a>
                         <a
                             href={contact?.linkedin || '#'}
